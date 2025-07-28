@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Eye, EyeOff, User, Mail, Lock } from 'lucide-react';
+import {ApiClient} from "@/app/feature/http/ApiClient";
+import {useAuthentication} from "@/app/feature/authentication/AuthenticationProviderHook";
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAuthSuccess: (token: string) => void;
 }
 
-const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess }) => {
+const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -19,6 +20,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess })
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const { attemptAuthentication } = useAuthentication();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -26,17 +29,36 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess })
     setSuccess('');
     try {
       const body: any = { username, password, email };
-      if (mode === 'register') body.email = email;
-      const res = await fetch(`/api/auth/${mode}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Unknown error');
+
       if (mode === 'login') {
-        onAuthSuccess(data.token);
+        body.email = username;
+      }
+
+      const location = mode === 'register' ? '/identity/register' : '/identity/login';
+
+      console.log('hgelo');
+
+
+
+      const response = await attemptAuthentication({
+        email: body.email,
+        password: body.password,
+      });
+
+
+      if (response === null) {
         onClose();
+        return;
+      }
+
+      else
+
+
+
+      // @ts-ignore
+      if (!res.ok) throw new Error(res.error || 'Unknown error');
+      if (mode === 'login') {
+
       } else {
         setMode('login');
         setSuccess('Registration successful! Please log in.');
@@ -45,7 +67,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuccess })
         setEmail('');
       }
     } catch (err: any) {
-      setError(err.message);
+      setError(err.response.data);
     } finally {
       setLoading(false);
     }

@@ -1,13 +1,19 @@
-import { useCommonStore, useAuthStore } from "@/app/_store/commonStore";
 import { Coins } from "lucide-react";
 import React from "react";
+import {useAuthentication} from "@/app/feature/authentication/AuthenticationProviderHook";
 
-function ConfigForDice({ onBet }: { onBet: (amount: number) => void }) {
-  const [betAmount, setBetAmount] = React.useState<number>(0);
-  const [inputValue, setInputValue] = React.useState<string>("");
+
+
+type ConfigForDiceProps = {
+  onBet: (amount: number) => void;
+  betDisabled: boolean;
+}
+
+function ConfigForDice({ onBet, betDisabled }: ConfigForDiceProps) {
+  const [betAmount, setBetAmount] = React.useState<number>(1);
+  const [inputValue, setInputValue] = React.useState<string>("1");
   const [error, setError] = React.useState<string>("");
-  const { balance } = useCommonStore();
-  const { user, token, fetchUser } = useAuthStore();
+  const { user } = useAuthentication();
   const walletBalance = user?.wallet?.balance ?? 1000;
 
   const handleBetAmountChange = (newValue: string) => {
@@ -56,8 +62,12 @@ function ConfigForDice({ onBet }: { onBet: (amount: number) => void }) {
       <div>
         <div className="flex justify-between mb-2">
           <span className="text-[#b0b9d2]">Bet Amount</span>
-          <span className="text-white">
-            ${walletBalance ? walletBalance.toFixed(2) : "0.00"}
+          <span className="text-white flex">
+            <Coins className={'w-4 mr-1 text-green-500'}/>
+            {user ? user.wallet.balance.toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }) : null}
           </span>
         </div>
       </div>
@@ -67,8 +77,8 @@ function ConfigForDice({ onBet }: { onBet: (amount: number) => void }) {
             type="number"
             id="betAmount"
             value={inputValue}
-            min={0.01}
-            step={0.01}
+            min={1}
+            step={1}
             onChange={(e) => handleBetAmountChange(e.target.value)}
             className="w-full bg-[#1e2a36] px-3 py-3 outline-none text-white"
             onClick={(e) => e.currentTarget.select()}
@@ -96,7 +106,7 @@ function ConfigForDice({ onBet }: { onBet: (amount: number) => void }) {
       <button
         onClick={handleOnBet}
         className="w-full py-3 rounded-md bg-success text-black hover:bg-green-700 disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors font-medium"
-        disabled={!betAmount || betAmount <= 0 || betAmount > walletBalance}
+        disabled={!betAmount || betAmount <= 0 || betAmount > walletBalance || betDisabled}
       >
         Bet
       </button>

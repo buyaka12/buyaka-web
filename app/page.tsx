@@ -1,34 +1,34 @@
 /* eslint-disable @next/next/no-img-element */
 //edit main page1
 import createFeedback from "@/action/action";
-import { Gamepad2, Gem, Rocket } from "lucide-react";
+import {Gamepad2, Gem, Rocket} from "lucide-react";
 import Link from "next/link";
 
 const games = [
   {
     name: "MINES",
     link: "/mines",
-    logo: <Gem size={48} />,
+    logo: <Gem size={48}/>,
     img: "/assets/mines.png",
   },
-  {
-    name: "PLINKO",
-    link: "/plinko",
-    logo: <Rocket size={48} />,
-    img: "/assets/plinko.png",
-  },
+  // {
+  //   name: "PLINKO",
+  //   link: "/plinko",
+  //   logo: <Rocket size={48}/>,
+  //   img: "/assets/plinko.png",
+  // },
   {
     name: "DICE",
     link: "/dice",
-    logo: <Rocket size={48} />,
+    logo: <Rocket size={48}/>,
     img: "/assets/dice.png",
   },
-  {
-    name: "LIMBO",
-    link: "/limbo",
-    logo: <Rocket size={48} />,
-    img: "/assets/limbo.avif",
-  },
+  // {
+  //   name: "LIMBO",
+  //   link: "/limbo",
+  //   logo: <Rocket size={48}/>,
+  //   img: "/assets/limbo.avif",
+  // },
 ];
 
 export default function Home() {
@@ -40,33 +40,18 @@ export default function Home() {
     >
       <section
         className="w-full flex flex-col items-center text-center"
-        aria-labelledby="welcome-heading"
-      >
+        aria-labelledby="welcome-heading">
         <h1
           id="welcome-heading"
-          className="text-4xl sm:text-6xl font-bold mb-4 flex flex-col items-center justify-center gap-2 sm:gap-3"
-        >
+          className="text-4xl sm:text-6xl font-bold mb-16 flex flex-col items-center justify-center gap-2 sm:gap-3">
           <div className="flex items-center gap-2 text-white">
             Welcome to <span className="text-blue-500">Stakers</span>
-
           </div>
-          <img
-            src="/assets/stake-logo.svg"
-            alt="Stakers Logo - Play casino games on Stakers"
-            width={128}
-            height={32}
-            className="w-28 sm:w-32 inline-block"
-          />
         </h1>
-        <p className="text-xl text-gray-500">Play Real Games on Stakers</p>
       </section>
+
       <section className="p-6" aria-labelledby="games-heading">
-        <h3
-          id="games-heading"
-          className="text-xl text-white p-4 font-bold flex gap-4 items-center"
-        >
-          <Gamepad2 /> Play Now
-        </h3>
+
         <div
           className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 px-2 sm:px-4 w-full max-w-7xl mx-auto"
           role="list"
@@ -110,41 +95,8 @@ export default function Home() {
           ))}
         </div>
       </section>
-      <div className="text-white text-3xl">
+      <div className="text-white/40 text-3xl mt-12 ">
         new games coming soon...
-      </div>
-      <div className="max-w-md mx-auto pt-56 rounded-lg shadow-xl">
-        <h2 className="text-2xl font-bold text-white mb-4">
-          Leave Feedback / Request Features
-        </h2>
-        <form
-          action={async (formData) => {
-            "use server";
-            createFeedback(formData.get("feedback") as string);
-          }}
-          className="space-y-4"
-        >
-          <label
-            htmlFor="feedback"
-            className="block text-sm font-medium text-gray-300"
-          >
-            Your Feedback:
-          </label>
-          <textarea
-            id="feedback"
-            name="feedback"
-            maxLength={100}
-            placeholder="Enter your feedback here..."
-            className="w-full px-4 py-2 border border-gray-600 rounded-md  placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            required
-          />
-         <button
-  type="submit"
-  className="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600 transition-colors duration-200"
->
-  Submit Feedback
-</button>
-        </form>
       </div>
     </main>
   );

@@ -57,6 +57,7 @@ export default function GridComponent({
 
         const baseClasses = `
           aspect-square w-full min-h-18 flex justify-center
+          border-b-8 border-b-[#1b3242]
           items-center transition-all rounded-md duration-500
         `;
 
@@ -64,7 +65,7 @@ export default function GridComponent({
           ? isMine
             ? "border-red-500 text-white animate-shake bg-[#071924] scale-95"
             : "border-green-500 text-white animate-pop bg-[#071924] scale-95"
-          : "bg-[#2f4553] hover:scale-105 active:scale-95 active:bg-[#071924]";
+          : "bg-[#2f4553] hover:scale-105 active:scale-95 active:bg-[#071924] active:border-b-[#071924]";
 
         const greyOut =
           revealMode === "all" && !isClicked ? "opacity-50 grayscale" : "";

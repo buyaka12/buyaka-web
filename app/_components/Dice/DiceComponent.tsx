@@ -132,6 +132,7 @@ export default function DiceComponent({
           <Slider
             value={value}
             onValueChange={handleValueChange}
+            min={1}
             max={99}
             step={1}
           />

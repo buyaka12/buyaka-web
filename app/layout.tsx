@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "./_components/Navbar";
 import { Analytics } from "@vercel/analytics/next";
 import Footer from "./_components/Footer";
+import AuthenticationProvider from "@/app/feature/authentication/AuthenticationProviderHook";
 
 const inter = Geist({ subsets: ["latin"] });
 
@@ -49,11 +50,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} bg-gray-800`}>
+      <AuthenticationProvider>
         <Navbar />
         {children}
         <Analytics />
         <Footer />
+      </AuthenticationProvider>
       </body>
     </html>
   );

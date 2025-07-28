@@ -1,28 +1,21 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
-//navagation bar edit nav bar
-import { useCommonStore } from "@/app/_store/commonStore";
-import { Coffee, Coins, User } from "lucide-react";
+import {useCommonStore} from "@/app/_store/commonStore";
+import {Coffee, Coins, User} from "lucide-react";
 import Link from "next/link";
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import AuthModal from './ui/AuthModal';
-import { useAuthStore } from '../_store/commonStore';
+import {useAuthentication} from "@/app/feature/authentication/AuthenticationProviderHook";
+import {UserBalanceNumber} from "@/app/_components/UserBalanceNumber";
 
 export default function Navbar() {
-  const { balance, clearCommonState } = useCommonStore();
-  const { token, user, setToken, setUser, logout, fetchUser } = useAuthStore();
+  const {balance, clearCommonState} = useCommonStore();
   const [showAuth, setShowAuth] = useState(false);
+  const {isLoading, user, logout} = useAuthentication();
 
   useEffect(() => {
-    if (token && !user) {
-      fetchUser(token);
-    }
-  }, [token, user, fetchUser]);
+    console.log('user', user);
+  }, [user]);
 
-  const handleAuthSuccess = (token: string) => {
-    setToken(token);
-    fetchUser(token);
-  };
 
   return (
     <nav className="top-0 left-0 right-0 z-50 backdrop-blur-lg bg-black/40 border-b border-white/10">
@@ -32,9 +25,10 @@ export default function Navbar() {
             href="/"
             className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
           >
-<span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-  Stakers
-</span>
+            <span
+              className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+              Stakers
+            </span>
 
             <img
               src="/assets/stake-logo.svg"
@@ -45,43 +39,37 @@ export default function Navbar() {
             />
           </Link>
           <div className="flex items-center gap-3 sm:gap-4">
-            {balance <= 1 && (
-              <button
-                onClick={() => clearCommonState()}
-                className="text-sm text-white/70 hover:text-white transition-colors px-3 py-1.5 rounded-lg hover:bg-white/5"
-              >
-                Reset Credit
-              </button>
-            )}
+            {user && user.wallet ? (
+              <>
+                <div
+                  className="flex items-center gap-2 bg-white/5 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/10 text-white min-w-[120px] justify-center">
+                  <Coins className="w-5 h-5 text-blue-400"/>
+                  <span className="text-base font-medium">
+                    <UserBalanceNumber />
+                  </span>
+                  <span className="ml-2 text-xs text-gray-300 font-semibold">Account Balance</span>
+                </div>
 
-<div className="flex items-center gap-2 bg-white/5 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/10 text-white min-w-[120px] justify-center">
-  <Coins className="w-5 h-5 text-blue-400" />
-  {user && user.wallet ? (
-    <>
-      <span className="text-base font-medium">{user.wallet.balance.toFixed(2)}</span>
-      <span className="ml-2 text-xs text-gray-300 font-semibold">Account Balance</span>
-    </>
-  ) : (
-    <span className="text-base font-medium">Login</span>
-  )}
-</div>
-<a
-  href="https://www.agrandexchange.com/"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="group bg-blue-500 hover:bg-blue-600 transition-colors p-2.5 sm:p-3 rounded-xl inline-flex items-center justify-center"
->
-  <Coffee className="w-5 h-5 text-white" />
-  <span className="hidden sm:inline text-white ml-2 font-medium">
+              </>
+            ) : null}
+            <a
+              href="https://www.agrandexchange.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group bg-blue-500 hover:bg-blue-600 transition-colors p-2.5 sm:p-3 rounded-xl inline-flex items-center justify-center"
+            >
+              <Coffee className="w-5 h-5 text-white"/>
+              <span className="hidden sm:inline text-white ml-2 font-medium">
     Play Our Rsps
   </span>
-</a>
+            </a>
 
           </div>
           <div>
             {user ? (
               <div className="flex items-center gap-4">
-                <span className="font-semibold text-white text-lg px-4 py-2 rounded-full bg-gradient-to-r from-blue-700 to-blue-500 shadow-sm">
+                <span
+                  className="font-semibold text-white text-lg px-4 py-2 rounded-full bg-gradient-to-r from-blue-700 to-blue-500 shadow-sm">
                   {user.username}
                 </span>
                 <button
@@ -96,14 +84,14 @@ export default function Navbar() {
                 className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 text-white font-bold shadow-md hover:scale-105 hover:from-blue-700 hover:to-blue-500 transition-all duration-150 focus:outline-none"
                 onClick={() => setShowAuth(true)}
               >
-                <User className="w-5 h-5" />
+                <User className="w-5 h-5"/>
                 Login / Register
               </button>
             )}
           </div>
         </div>
       </div>
-      <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)} onAuthSuccess={handleAuthSuccess} />
+      <AuthModal isOpen={showAuth} onClose={() => setShowAuth(false)}/>
     </nav>
   );
 }
