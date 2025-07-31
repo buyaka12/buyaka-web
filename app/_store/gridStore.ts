@@ -7,6 +7,8 @@ type GridStore = {
 	numberOfSuccessfulClicks: number;
 	setNumberOfSuccessfulClicks: (numberOfSuccessfulClicks: number) => void;
 	resetGrid: () => void;
+	gameId: string | null;
+	setGameId: (gameId: string) => void;
 };
 
 export const useGridStore = create<GridStore>((set) => ({
@@ -23,4 +25,6 @@ export const useGridStore = create<GridStore>((set) => ({
 		});
 	},
 	resetGrid: () => set({ selectedGrid: {}, numberOfSuccessfulClicks: 0 }),
+	gameId: null,
+	setGameId: (gameId: string) => set({ gameId }),
 }));

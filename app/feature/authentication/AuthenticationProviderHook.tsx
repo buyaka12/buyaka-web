@@ -4,7 +4,7 @@ import type {ReactNode} from "react";
 import {ApiClient} from "../http/ApiClient";
 import axios from "axios";
 import {LoginErrorResponse, LoginRequest} from "./models/Login";
-import {UserModel, WalletModel} from "@/app/api/auth/UserModel";
+import {UserModel, WalletModel} from "@/app/feature/authentication/models/UserModel";
 
 type AuthenticationProviderProps = {
   isAuthenticated: boolean;

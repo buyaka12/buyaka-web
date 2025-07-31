@@ -45,7 +45,7 @@ export default function Navbar() {
                   className="flex items-center gap-2 bg-white/5 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/10 text-white min-w-[120px] justify-center">
                   <Coins className="w-5 h-5 text-blue-400"/>
                   <span className="text-base font-medium">
-                    <UserBalanceNumber />
+                    <UserBalanceNumber/>
                   </span>
                   <span className="ml-2 text-xs text-gray-300 font-semibold">Account Balance</span>
                 </div>
@@ -60,7 +60,7 @@ export default function Navbar() {
             >
               <Coffee className="w-5 h-5 text-white"/>
               <span className="hidden sm:inline text-white ml-2 font-medium">
-    Play Our Rsps
+    {/*Play Our Rsps*/}
   </span>
             </a>
 
