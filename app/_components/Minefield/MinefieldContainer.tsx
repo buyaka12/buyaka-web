@@ -25,6 +25,9 @@ export function MinefieldContainer() {
   const gameFinished = fields.filter(item => item !== undefined).length === 25;
   const revealedCount = revealed ? revealed.size : 0;
 
+  const [previousBetAmount, setPreviousBetAmount] = useState<number>(1);
+  const [previousBombCount, setPreviousBombCount] = useState<number>(1);
+
 
   const handleStartGame = async (startModel: MinefieldGameStartModel) => {
     resetGame();
@@ -35,6 +38,10 @@ export function MinefieldContainer() {
       });
       setBombCount(startModel.bombCount);
       setRecentBetAmount(startModel.betAmount);
+
+      setPreviousBetAmount(startModel.betAmount);
+      setPreviousBombCount(startModel.bombCount);
+
       modifyBalance(startNewGame.currentBalance);
       setGameId(startNewGame.gameId);
     } catch(error) {
@@ -48,6 +55,9 @@ export function MinefieldContainer() {
     setConfigError(null);
     setFields([]);
     setRevealed(new Set());
+
+    setPreviousBombCount(0);
+    setPreviousBetAmount(0);
   }
 
   const handleCashout = async () => {
@@ -124,10 +134,7 @@ export function MinefieldContainer() {
       return 0;
     }
 
-    if (gameFinished || gameLost) {
-      return 0;
-    }
-    const multiplier = calculateMinesMultiplier(bombCount, revealedCount);
+    const multiplier = calculateMinesMultiplier(previousBombCount, revealedCount);
     const profit = recentBetAmount * (multiplier - 1);
     return profit;
   }
@@ -158,6 +165,8 @@ export function MinefieldContainer() {
           fields={fields}
           gameLost={gameLost}
           gameFinished={gameFinished}
+          totalWinnings={calculateProfit()}
+          multiplier={calculateMinesMultiplier(previousBombCount, revealedCount)}
         />
       </div>
     </div>
@@ -189,18 +198,11 @@ function calculateMinesMultiplier(bombCount: number, revealedTiles: number): num
   const TOTAL_TILES = 25;
   const HOUSE_EDGE = 0.99;
 
-  if (bombCount < 0 || bombCount >= TOTAL_TILES) {
-    throw new Error("Bomb count must be between 0 and 24.");
-  }
   if (revealedTiles <= 0) {
     return 1.0;
   }
 
   const diamondCount = TOTAL_TILES - bombCount;
-  if (revealedTiles > diamondCount) {
-    throw new Error("Revealed tiles cannot exceed the number of available diamonds.");
-  }
-
   const totalCombinations = combinations(TOTAL_TILES, revealedTiles);
   const successfulCombinations = combinations(diamondCount, revealedTiles);
 

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type {AxiosRequestConfig} from 'axios';
 
-export const BASE_URL = "http://localhost:5157/api";
+export const BASE_URL = "http://217.42.232.71:5005/api";
 
 export class ApiClient {
   private static async makeRequest<T>(config: AxiosRequestConfig): Promise<T> {

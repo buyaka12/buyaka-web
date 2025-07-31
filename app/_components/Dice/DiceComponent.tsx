@@ -55,8 +55,8 @@ export default function DiceComponent({
   };
 
   return (
-    <div className="w-full aspect-square bg-gray-800/30 backdrop-blur-sm border border-gray-700 rounded-xl p-3 md:p-6 lg:p-8 flex flex-col items-center justify-between">
-      <div className="w-full flex gap-4 flex-col">
+    <div className="w-full aspect-square bg-gray-800/30 backdrop-blur-sm border border-gray-700 rounded-xl p-3 md:p-6 lg:p-8 flex flex-col items-center">
+      <div className="w-full flex gap-4 flex-col mb-10">
         <div className="flex flex-row-reverse items-center w-full justify-end gap-2 overflow-x-auto no-scrollbar">
           {result
             .slice(-17)
