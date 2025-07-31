@@ -1,5 +1,5 @@
 "use client";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {MinefieldConfig} from "@/app/_components/Minefield/MinefieldConfig";
 import {MinefieldGameStartModel} from "@/app/_components/Minefield/Models/MinefieldGameStartModel";
 import {useAuthentication} from "@/app/feature/authentication/AuthenticationProviderHook";
@@ -18,15 +18,26 @@ export function MinefieldContainer() {
   const [configError, setConfigError] = useState(null);
   const [revealed, setRevealed] = useState<Set<number>>(new Set());
   const [fields, setFields] = useState<boolean[]>([]);
+  const [previousBetAmount, setPreviousBetAmount] = useState<number>(1);
+  const [previousBombCount, setPreviousBombCount] = useState<number>(1);
 
   // Computed values
   const gameStarted = gameId !== null;
   const gameLost = Array.from(revealed).some(index => fields[index]);
-  const gameFinished = fields.filter(item => item !== undefined).length === 25;
   const revealedCount = revealed ? revealed.size : 0;
+  const gameFinished = fields.filter(item => item !== undefined).length === 25
+    || revealedCount >= (25 - previousBombCount);
 
-  const [previousBetAmount, setPreviousBetAmount] = useState<number>(1);
-  const [previousBombCount, setPreviousBombCount] = useState<number>(1);
+
+  useEffect(() => {
+    (async () => {
+      if (revealedCount >= (25 - previousBombCount)) {
+        handleCashout()
+      }
+    })();
+
+
+  }, [revealedCount]);
 
 
   const handleStartGame = async (startModel: MinefieldGameStartModel) => {
@@ -44,7 +55,7 @@ export function MinefieldContainer() {
 
       modifyBalance(startNewGame.currentBalance);
       setGameId(startNewGame.gameId);
-    } catch(error) {
+    } catch (error) {
       // @ts-ignore
       setConfigError(error.data.error);
     }
@@ -140,7 +151,7 @@ export function MinefieldContainer() {
   }
 
 
-  return(
+  return (
 
     <div className="flex flex-col md:flex-row w-full bg-background text-white rounded-lg">
       {/* Configuration Panel */}
@@ -153,7 +164,7 @@ export function MinefieldContainer() {
           setBombCount={setBombCount}
           handleClickBet={handleStartGame}
           handleCashout={handleCashout}
-          payout={ calculateProfit() }
+          payout={calculateProfit()}
         />
       </div>
 
@@ -173,7 +184,6 @@ export function MinefieldContainer() {
   )
 
 }
-
 
 
 function combinations(n: number, r: number): number {
