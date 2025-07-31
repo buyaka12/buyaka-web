@@ -18,8 +18,9 @@ export function MinefieldGrid({
 
 
   return (
-    <div className="grid grid-cols-5 gap-3 w-full max-w-xl mx-auto relative">
 
+
+    <div className={'p-16 relative'}>
       {/*this is the game over overlay*/}
       <div
         className={`absolute inset-0 z-10 flex items-center justify-center bg-black/30
@@ -35,43 +36,52 @@ export function MinefieldGrid({
           <p className={'mt-4 text-lg font-bold text-red-100'}>Game over!</p>
         </div>
       </div>
+      <div className="grid grid-cols-5 gap-3 w-full mx-auto relative">
+        {Array.from({length: 25}).map((_, index) => {
+          const isRevealed = revealed.has(index) || gameLost || gameFinished;
+          const isMine = fields[index] === true;
+          const isBlank = fields[index] === undefined;
 
+          // This logic greys out non-clicked bombs when the game is over
+          const greyOutOnLoss = (gameLost || gameFinished) && !revealed.has(index) ? 'grayscale opacity-60' : '';
 
-      {Array.from({length: 25}).map((_, index) => {
-        const isRevealed = revealed.has(index) || gameLost || gameFinished;
-        const isMine = fields[index] === true;
-
-        // This logic greys out non-clicked bombs when the game is over
-        const greyOutOnLoss = (gameLost || gameFinished) && !revealed.has(index) ? 'grayscale opacity-60' : '';
-
-        return (
-          <div
-            key={index}
-            className="group [perspective:1000px] aspect-square select-none"
-            onClick={() => {
-              handleTileClick(index);
-            }}>
+          return (
             <div
-              className={`relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] ${isRevealed ? '[transform:rotateY(180deg)]' : ''}`}>
+              key={index}
+              className="group [perspective:1000px] aspect-square select-none"
+              onClick={() => {
+                handleTileClick(index);
+              }}>
               <div
-                className="absolute w-full h-full [backface-visibility:hidden] bg-[#2f4553]
+                className={`relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] ${isRevealed ? '[transform:rotateY(180deg)]' : ''}`}>
+                <div
+                  className="absolute w-full h-full [backface-visibility:hidden] bg-[#2f4553]
                            border-b-8 border-b-[#1b3242] rounded-md cursor-pointer
                            hover:scale-105 active:scale-95 transition-transform">
-              </div>
+                </div>
 
-              <div
-                className={`absolute w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-primary flex items-center justify-center rounded-md`}
-              >
-                <img
-                  src={isMine ? "/assets/mine.svg" : "/assets/diamond.svg"}
-                  alt={isMine ? "bomb" : "diamond"}
-                  className={`w-3/5 h-3/5 ${greyOutOnLoss}`}
-                />
+                <div
+                  className={`absolute w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)] bg-primary flex items-center justify-center rounded-md`}
+                >
+
+                  { isBlank ? null : (
+                    <img
+                      src={  isMine ? "/assets/mine.svg" : "/assets/diamond.svg"}
+                      alt={isMine ? "bomb" : "diamond"}
+                      className={`w-3/5 h-3/5 ${greyOutOnLoss}`}
+                    />
+                  ) }
+
+
+
+                </div>
               </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
+
+
   );
 }

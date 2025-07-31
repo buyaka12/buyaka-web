@@ -94,7 +94,13 @@ export function MinefieldContainer() {
         setGameId(prevState => {
           return null;
         });
+        const audio = new Audio("/assets/audio/mine-audio.mp3");
+        await audio.play();
+        return;
+      }
 
+
+      if (!result.success) {
         return;
       }
 
@@ -103,6 +109,9 @@ export function MinefieldContainer() {
         newFields[result.flaggedPosition] = false; // The position is safe (not a bomb)
         return newFields;
       });
+
+      const audio = new Audio("/assets/audio/win-audio.mp3");
+      await audio.play();
 
 
     } catch (err) {
@@ -142,7 +151,7 @@ export function MinefieldContainer() {
       </div>
 
 
-      <div className="flex-1 flex flex-col p-4">
+      <div className="flex-1 flex flex-col w-full">
         <MinefieldGrid
           handleTileClick={handleClickTile}
           revealed={revealed}

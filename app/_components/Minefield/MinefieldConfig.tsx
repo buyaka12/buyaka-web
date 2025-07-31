@@ -95,7 +95,11 @@ export function MinefieldConfig(
           <div>
             <input type="range" id="volume" name="volume"
                    defaultValue={bombCount}
-                   onChange={e => setBombCount(parseInt(e.target.value))}
+                   onChange={e => {
+                     setBombCount(parseInt(e.target.value));
+                     const audio = new Audio("/assets/audio/drag-audio.mp3");
+                     audio.play();
+                   }}
                    min="1"
                    max="24"
                    disabled={gameStarted}
